@@ -3,7 +3,11 @@ from llama_index.core.node_parser import SentenceSplitter
 from llama_index.embeddings.fastembed import FastEmbedEmbedding
 from llama_index.core import Settings, SimpleDirectoryReader, VectorStoreIndex
 
-reader = SimpleDirectoryReader(input_dir="./test_data/")
+from reader import file_metadata
+
+reader = SimpleDirectoryReader(
+    input_dir="./test_data/", file_metadata=file_metadata, recursive=True
+)
 documents = reader.load_data()
 
 sentence_parser = SentenceSplitter(
