@@ -17,7 +17,6 @@ This project implements a Retrieval Augmented Generation (RAG) system using `lla
 ### Setup
 
 1.  **Install Dependencies**: This project uses Python and relies on `llama_index` and other related libraries. A `requirements.txt` file is not provided, but the key libraries observed are `llama_index` (with integrations for `FastEmbedEmbedding` and `Ollama`) and `numpy`.
-    - **TODO**: Create a `requirements.txt` file or list the exact pip install commands for all dependencies.
 2.  **Ollama**: Ensure Ollama is installed and running, as the `rag.py` and `retriever.py` scripts are configured to use an Ollama instance at `127.0.0.1:11434`. You may also need to pull the `qwen3:0.6b` model used in `rag.py` and `retriever.py`.
 
 ### Indexing Data
