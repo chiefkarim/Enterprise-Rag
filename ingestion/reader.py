@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 
 
@@ -21,8 +21,10 @@ def fille_metadata_extractor(
 def get_created_at(file_path: str) -> str:
     stat = os.stat(file_path)
     created_timestamp = stat.st_atime
-    created_date = datetime.fromtimestamp(created_timestamp)
-    return created_date.isoformat()
+    created_date = datetime.fromtimestamp(created_timestamp).replace(
+        tzinfo=timezone.utc
+    )
+    return created_date.isoformat().replace("+00:00", "Z")
 
 
 def department_extractor(file_path: str) -> dict[str, str | None]:
