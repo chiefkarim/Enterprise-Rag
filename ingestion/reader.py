@@ -18,6 +18,14 @@ def fille_metadata_extractor(
     return result
 
 
+def department_extractor(file_path: str) -> dict[str, str | None]:
+    parent_dir = file_path.split(os.sep)[-2]
+
+    result: dict[str, str | None] = {"department": parent_dir}
+
+    return result
+
+
 def get_created_at(file_path: str) -> str:
     stat = os.stat(file_path)
     created_timestamp = stat.st_atime
@@ -25,20 +33,3 @@ def get_created_at(file_path: str) -> str:
         tzinfo=timezone.utc
     )
     return created_date.isoformat().replace("+00:00", "Z")
-
-
-def department_extractor(file_path: str) -> dict[str, str | None]:
-    result: dict[str, str | None] = {"department": None}
-    if "consulting" in file_path:
-        result["department"] = "consulting"
-    elif "engineering" in file_path:
-        result["department"] = "engineering"
-    elif "finance" in file_path:
-        result["department"] = "finance"
-    elif "general" in file_path:
-        result["department"] = "general"
-    elif "hr" in file_path:
-        result["department"] = "hr"
-    elif "rnd" in file_path:
-        result["department"] = "rnd"
-    return result
