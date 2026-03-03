@@ -1,16 +1,16 @@
-from llama_index.core import StorageContext, load_index_from_storage, Settings
-from llama_index.embeddings.fastembed import FastEmbedEmbedding
+from llama_index.core import (
+    VectorStoreIndex,
+    Settings,
+)
 from llama_index.core.postprocessor import SentenceTransformerRerank
 from llama_index.llms.ollama import Ollama
 from llama_index.core.base.response.schema import StreamingResponse
 
-Settings.embed_model = FastEmbedEmbedding(
-    model_name="BAAI/bge-small-en-v1.5",
-    local_files_only=False,
-)
+from infrastructure.vector_store_provider import VectorStoreProvider
 
-storage_context = StorageContext.from_defaults(persist_dir="./indexed-data/")
-index = load_index_from_storage(storage_context=storage_context)
+provider = VectorStoreProvider()
+
+index = VectorStoreIndex.from_vector_store(vector_store=provider.get_vector_store())
 
 reranking_post_processor = SentenceTransformerRerank(
     model="ibm-granite/granite-embedding-reranker-english-r2",
@@ -20,6 +20,7 @@ reranking_post_processor = SentenceTransformerRerank(
 Settings.llm = Ollama(
     model="qwen3:0.6b", request_timeout=3000, base_url="127.0.0.1:11434", thinking=False
 )
+
 query_engine = index.as_query_engine(
     similarity_top_k=3,
     node_postprocessors=[reranking_post_processor],
