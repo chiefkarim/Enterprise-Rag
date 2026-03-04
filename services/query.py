@@ -10,7 +10,6 @@ from models.query_request import QueryFilters
 
 def query(query: str, user_filters: Optional[QueryFilters] = None):
     provider = VectorStoreProvider()
-
     must = []
     if user_filters:
         department = user_filters.department
@@ -20,6 +19,9 @@ def query(query: str, user_filters: Optional[QueryFilters] = None):
                     key="department", match=MatchValue(value=department.value)
                 )
             )
+        created_at = user_filters.created_at
+        if created_at:
+            must.append(FieldCondition(key="created_at", range=(created_at)))
     qdrant_filters = Filter(must=must) if len(must) != 0 else None
 
     index = VectorStoreIndex.from_vector_store(vector_store=provider.get_vector_store())

@@ -27,6 +27,24 @@
         </select>
       </div>
 
+      <fieldset style="margin-top: 10px; padding: 10px">
+        <legend>created_at range</legend>
+
+        <div>
+          <label for="createdFrom">From:</label>
+          <input type="date" id="createdFrom" name="createdFrom" />
+        </div>
+
+        <div style="margin-top: 8px">
+          <label for="createdTo">To:</label>
+          <input type="date" id="createdTo" name="createdTo" />
+        </div>
+
+        <div style="margin-top: 8px; font-size: 12px; opacity: 0.85">
+          Dates are sent as RFC3339 (UTC). Leaving either blank means no bound.
+        </div>
+      </fieldset>
+
       <div style="margin-top: 10px">
         <button type="submit">Search</button>
       </div>
@@ -38,17 +56,49 @@
       const form = document.getElementById("queryForm");
       const resultEl = document.getElementById("result");
 
+      // Convert <input type="date"> value (YYYY-MM-DD) to RFC3339/ISO string in UTC.
+      // For "from" (gte): start of day UTC.
+      // For "to" (lte): end of day UTC (23:59:59).
+      function dateToRFC3339UTC(dateStr, { endOfDay = false } = {}) {
+        if (!dateStr) return null;
+        const [y, m, d] = dateStr.split("-").map(Number);
+        if (!y || !m || !d) return null;
+
+        const dt = endOfDay
+          ? new Date(Date.UTC(y, m - 1, d, 23, 59, 59))
+          : new Date(Date.UTC(y, m - 1, d, 0, 0, 0));
+
+        return dt.toISOString(); // e.g. "2026-03-04T00:00:00.000Z"
+      }
+
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const query = document.getElementById("queryInput").value.trim();
         const department = document.getElementById("departmentSelect").value;
 
-        // Build JSON payload matching your Pydantic model:
-        // QueryRequest: { query: str, filters?: { department?: Department } }
+        const createdFrom = document.getElementById("createdFrom").value; // YYYY-MM-DD
+        const createdTo = document.getElementById("createdTo").value;     // YYYY-MM-DD
+
+        const gte = dateToRFC3339UTC(createdFrom, { endOfDay: false });
+        const lte = dateToRFC3339UTC(createdTo, { endOfDay: true });
+
+        const filters = {};
+
+        if (department) {
+          filters.department = department;
+        }
+
+        // For datetime indexing, send datetime strings and only include set bounds
+        if (gte !== null || lte !== null) {
+          filters.created_at = {};
+          if (gte !== null) filters.created_at.gte = gte;
+          if (lte !== null) filters.created_at.lte = lte;
+        }
+
         const payload = {
           query,
-          filters: department ? { department } : null,
+          filters: Object.keys(filters).length ? filters : null,
         };
 
         try {
@@ -59,7 +109,6 @@
           });
 
           const text = await res.text();
-          // Try to pretty print JSON if possible
           try {
             const json = JSON.parse(text);
             resultEl.textContent = JSON.stringify(json, null, 2);
