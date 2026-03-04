@@ -1,7 +1,6 @@
 from llama_index.core import SimpleDirectoryReader
 from llama_index.core.node_parser import SentenceSplitter
-from llama_index.embeddings.fastembed import FastEmbedEmbedding
-from llama_index.core import Settings, SimpleDirectoryReader, VectorStoreIndex
+from llama_index.core import SimpleDirectoryReader, VectorStoreIndex
 from infrastructure.vector_store_provider import VectorStoreProvider
 from .reader import file_metadata
 
@@ -16,7 +15,7 @@ sentence_parser = SentenceSplitter(
 )
 nodes = sentence_parser.get_nodes_from_documents(documents)
 
-provider = VectorStoreProvider()
+provider = VectorStoreProvider(collection_name="company")
 index = VectorStoreIndex(
     nodes,
     storage_context=provider.get_storage_context(),
