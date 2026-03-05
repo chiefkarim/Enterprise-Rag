@@ -2,26 +2,21 @@ from typing import Optional
 from llama_index.core import (
     VectorStoreIndex,
 )
-from qdrant_client.http.models import MatchValue, FieldCondition, Filter
+from qdrant_client.http.models import Filter
 
 from infrastructure.vector_store_provider import VectorStoreProvider
 from models.query_request import QueryFilters
+from services.filter_handler import FilterHandlerFactory
 
 
 def query(query: str, user_filters: Optional[QueryFilters] = None):
     provider = VectorStoreProvider()
     must = []
+
     if user_filters:
-        department = user_filters.department
-        if department:
-            must.append(
-                FieldCondition(
-                    key="department", match=MatchValue(value=department.value)
-                )
-            )
-        created_at = user_filters.created_at
-        if created_at:
-            must.append(FieldCondition(key="created_at", range=(created_at)))
+        filter_handler = FilterHandlerFactory().filter_handler
+        must = filter_handler.apply_filters(user_filters)
+
     qdrant_filters = Filter(must=must) if len(must) != 0 else None
 
     index = VectorStoreIndex.from_vector_store(vector_store=provider.get_vector_store())
