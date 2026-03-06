@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Latafarraqo Vector Search</title>
     <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+      crossorigin
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/static/query.css" />
   </head>
 
@@ -15,84 +29,170 @@
       <header class="site-header">
         <div class="brand">
           <img
-            src="/static/latafarraqo-logo/vector/default-monochrome-white.svg"
+            src="/static/default-monochrome-white.svg"
             alt="Latafarraqo logo"
             width="200"
             height="400"
             fetchpriority="high"
           />
           <div class="brand-text">
-            <h1>Vector Search</h1>
-            <p class="subtitle">
-              Find documents fast with scoped filters & instant JSON output.
-            </p>
+            <p class="eyebrow">Latafarraqo Platform</p>
+            <h1>Vector Search Studio</h1>
+            <p class="subtitle">Precision retrieval with structured filters and JSON-first output.</p>
           </div>
+        </div>
+        <div class="header-actions">
+          <a class="ghost-link" href="#">Docs</a>
+          <a class="ghost-link" href="#">API</a>
+          <a class="header-cta" href="#main">Start a query</a>
         </div>
       </header>
 
-      <main id="main" class="card">
-        <h2>Ask a Question</h2>
-
-        <form id="queryForm">
-          <div class="form-row">
-            <label for="queryInput">Question</label>
-            <input
-              type="search"
-              id="queryInput"
-              name="query"
-              autocomplete="off"
-              inputmode="search"
-              required
-            />
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Search layer for enterprise knowledge</p>
+          <h2>Build an intelligent retrieval program in minutes.</h2>
+          <p class="hero-subtitle">
+            Query across departments, narrow by time, and ship clean JSON to every
+            downstream app. Designed for analysts and engineers who need answers fast.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-btn" href="#main">Run a query</a>
+            <button class="secondary-btn" type="button">View sample output</button>
           </div>
-
-          <div class="form-row">
-            <label for="departmentSelect">Department</label>
-            <select id="departmentSelect" name="department" autocomplete="off">
-              <option value="">No Filter</option>
-              {% for dep in departments %}
-              <option value="{{ dep }}">{{ dep }}</option>
-              {% endfor %}
-            </select>
+          <div class="hero-points">
+            <div>
+              <span class="point-title">Scoped filters</span>
+              <span class="point-sub">Department + RFC3339 time range</span>
+            </div>
+            <div>
+              <span class="point-title">Zero reformatting</span>
+              <span class="point-sub">Copy-ready JSON responses</span>
+            </div>
+            <div>
+              <span class="point-title">Safe by design</span>
+              <span class="point-sub">Clear bounds and predictable outputs</span>
+            </div>
           </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="stack stack-one"></div>
+          <div class="stack stack-two"></div>
+          <div class="stack stack-three"></div>
+          <div class="hero-card">
+            <p class="card-label">Pipeline status</p>
+            <p class="card-value">Ready for retrieval</p>
+            <div class="card-row">
+              <span>Filters</span>
+              <strong>Enabled</strong>
+            </div>
+            <div class="card-row">
+              <span>Output</span>
+              <strong>JSON</strong>
+            </div>
+          </div>
+          <div class="mini-card">
+            <p>Latest query</p>
+            <strong>“Q4 compliance updates”</strong>
+          </div>
+        </div>
+      </section>
 
-          <fieldset>
-            <legend>Created At Range</legend>
-
+      <main id="main" class="content">
+        <section class="panel form-panel">
+          <div class="panel-header">
+            <h2>Ask a Question</h2>
+            <p>Return the best matches with optional departmental and time bounds.</p>
+          </div>
+          <form id="queryForm">
             <div class="form-row">
-              <label for="createdFrom">From</label>
+              <label for="queryInput">Question</label>
               <input
-                type="date"
-                id="createdFrom"
-                name="createdFrom"
+                type="search"
+                id="queryInput"
+                name="query"
                 autocomplete="off"
+                inputmode="search"
+                placeholder="e.g. What changed in the 2024 lending policy?"
+                required
               />
             </div>
 
             <div class="form-row">
-              <label for="createdTo">To</label>
-              <input
-                type="date"
-                id="createdTo"
-                name="createdTo"
-                autocomplete="off"
-              />
+              <label for="departmentSelect">Department</label>
+              <select id="departmentSelect" name="department" autocomplete="off">
+                <option value="">No Filter</option>
+                {% for dep in departments %}
+                <option value="{{ dep }}">{{ dep }}</option>
+                {% endfor %}
+              </select>
             </div>
 
-            <div class="help-text">
-              Dates are sent as RFC3339 (UTC). Leaving either blank means no
-              bound.
-            </div>
-          </fieldset>
+            <fieldset>
+              <legend>Created At Range</legend>
 
-          <button id="submitBtn" type="submit">Search Documents</button>
-        </form>
+              <div class="form-row">
+                <label for="createdFrom">From</label>
+                <input
+                  type="date"
+                  id="createdFrom"
+                  name="createdFrom"
+                  autocomplete="off"
+                />
+              </div>
 
-        <section class="results">
-          <h2>Results</h2>
-          <pre id="result" aria-live="polite" role="status"></pre>
+              <div class="form-row">
+                <label for="createdTo">To</label>
+                <input
+                  type="date"
+                  id="createdTo"
+                  name="createdTo"
+                  autocomplete="off"
+                />
+              </div>
+
+              <div class="help-text">
+                Dates are sent as RFC3339 (UTC). Leaving either blank means no bound.
+              </div>
+            </fieldset>
+
+            <button id="submitBtn" type="submit">Search Documents</button>
+          </form>
         </section>
+
+        <aside class="panel results-panel" aria-live="polite">
+          <div class="panel-header">
+            <h2>Results</h2>
+            <p>Structured responses appear here in real time.</p>
+          </div>
+          <pre id="result" role="status"></pre>
+          <div class="result-footer">
+            <div>
+              <span class="meta-label">Tip</span>
+              <span class="meta-text">Use a precise department to narrow relevance.</span>
+            </div>
+            <div>
+              <span class="meta-label">Output</span>
+              <span class="meta-text">JSON formatted for APIs.</span>
+            </div>
+          </div>
+        </aside>
       </main>
+
+      <section class="feature-grid" aria-label="Highlights">
+        <article>
+          <h3>Fast validation</h3>
+          <p>Get immediate feedback on filters before shipping results downstream.</p>
+        </article>
+        <article>
+          <h3>Confidence checks</h3>
+          <p>Surface queries that need tighter scope without hiding context.</p>
+        </article>
+        <article>
+          <h3>Ready for teams</h3>
+          <p>Standardize retrieval across finance, legal, and operations.</p>
+        </article>
+      </section>
     </div>
 
     <script>
