@@ -1,64 +1,105 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Vector Search</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Latafarraqo Vector Search</title>
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/static/query.css" />
   </head>
+
   <body>
-    <h2>Ask a question</h2>
+    <a class="skip-link" href="#main">Skip to main content</a>
 
-    <form id="queryForm">
-      <div>
-        <input
-          type="text"
-          id="queryInput"
-          name="query"
-          style="width: 400px"
-          required
-        />
-      </div>
-
-      <div style="margin-top: 10px">
-        <label for="departmentSelect">department:</label>
-        <select id="departmentSelect" name="department">
-          <option value="">(no filter)</option>
-          {% for dep in departments %}
-          <option value="{{ dep }}">{{ dep }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <fieldset style="margin-top: 10px; padding: 10px">
-        <legend>created_at range</legend>
-
-        <div>
-          <label for="createdFrom">From:</label>
-          <input type="date" id="createdFrom" name="createdFrom" />
+    <div class="page">
+      <header class="site-header">
+        <div class="brand">
+          <img
+            src="/static/latafarraqo-logo/vector/default-monochrome-white.svg"
+            alt="Latafarraqo logo"
+            width="200"
+            height="400"
+            fetchpriority="high"
+          />
+          <div class="brand-text">
+            <h1>Vector Search</h1>
+            <p class="subtitle">
+              Find documents fast with scoped filters & instant JSON output.
+            </p>
+          </div>
         </div>
+      </header>
 
-        <div style="margin-top: 8px">
-          <label for="createdTo">To:</label>
-          <input type="date" id="createdTo" name="createdTo" />
-        </div>
+      <main id="main" class="card">
+        <h2>Ask a Question</h2>
 
-        <div style="margin-top: 8px; font-size: 12px; opacity: 0.85">
-          Dates are sent as RFC3339 (UTC). Leaving either blank means no bound.
-        </div>
-      </fieldset>
+        <form id="queryForm">
+          <div class="form-row">
+            <label for="queryInput">Question</label>
+            <input
+              type="search"
+              id="queryInput"
+              name="query"
+              autocomplete="off"
+              inputmode="search"
+              required
+            />
+          </div>
 
-      <div style="margin-top: 10px">
-        <button type="submit">Search</button>
-      </div>
-    </form>
+          <div class="form-row">
+            <label for="departmentSelect">Department</label>
+            <select id="departmentSelect" name="department" autocomplete="off">
+              <option value="">No Filter</option>
+              {% for dep in departments %}
+              <option value="{{ dep }}">{{ dep }}</option>
+              {% endfor %}
+            </select>
+          </div>
 
-    <pre id="result" style="margin-top: 16px; white-space: pre-wrap"></pre>
+          <fieldset>
+            <legend>Created At Range</legend>
+
+            <div class="form-row">
+              <label for="createdFrom">From</label>
+              <input
+                type="date"
+                id="createdFrom"
+                name="createdFrom"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="form-row">
+              <label for="createdTo">To</label>
+              <input
+                type="date"
+                id="createdTo"
+                name="createdTo"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="help-text">
+              Dates are sent as RFC3339 (UTC). Leaving either blank means no
+              bound.
+            </div>
+          </fieldset>
+
+          <button id="submitBtn" type="submit">Search Documents</button>
+        </form>
+
+        <section class="results">
+          <h2>Results</h2>
+          <pre id="result" aria-live="polite" role="status"></pre>
+        </section>
+      </main>
+    </div>
 
     <script>
       const form = document.getElementById("queryForm");
       const resultEl = document.getElementById("result");
+      const submitBtn = document.getElementById("submitBtn");
 
-      // Convert <input type="date"> value (YYYY-MM-DD) to RFC3339/ISO string in UTC.
-      // For "from" (gte): start of day UTC.
-      // For "to" (lte): end of day UTC (23:59:59).
       function dateToRFC3339UTC(dateStr, { endOfDay = false } = {}) {
         if (!dateStr) return null;
         const [y, m, d] = dateStr.split("-").map(Number);
@@ -68,7 +109,7 @@
           ? new Date(Date.UTC(y, m - 1, d, 23, 59, 59))
           : new Date(Date.UTC(y, m - 1, d, 0, 0, 0));
 
-        return dt.toISOString(); // e.g. "2026-03-04T00:00:00.000Z"
+        return dt.toISOString();
       }
 
       form.addEventListener("submit", async (e) => {
@@ -76,9 +117,8 @@
 
         const query = document.getElementById("queryInput").value.trim();
         const department = document.getElementById("departmentSelect").value;
-
-        const createdFrom = document.getElementById("createdFrom").value; // YYYY-MM-DD
-        const createdTo = document.getElementById("createdTo").value;     // YYYY-MM-DD
+        const createdFrom = document.getElementById("createdFrom").value;
+        const createdTo = document.getElementById("createdTo").value;
 
         const gte = dateToRFC3339UTC(createdFrom, { endOfDay: false });
         const lte = dateToRFC3339UTC(createdTo, { endOfDay: true });
@@ -89,7 +129,6 @@
           filters.department = department;
         }
 
-        // For datetime indexing, send datetime strings and only include set bounds
         if (gte !== null || lte !== null) {
           filters.created_at = {};
           if (gte !== null) filters.created_at.gte = gte;
@@ -100,6 +139,19 @@
           query,
           filters: Object.keys(filters).length ? filters : null,
         };
+
+        const queryParams = new URLSearchParams();
+        if (query) queryParams.set("query", query);
+        if (department) queryParams.set("department", department);
+        if (createdFrom) queryParams.set("createdFrom", createdFrom);
+        if (createdTo) queryParams.set("createdTo", createdTo);
+        const nextUrl = `${window.location.pathname}?${queryParams.toString()}`;
+        window.history.replaceState({}, "", nextUrl);
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Searching…";
+        resultEl.textContent = "";
+        resultEl.setAttribute("aria-busy", "true");
 
         try {
           const res = await fetch("/query", {
@@ -117,6 +169,10 @@
           }
         } catch (err) {
           resultEl.textContent = "Request failed: " + err;
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Search Documents";
+          resultEl.setAttribute("aria-busy", "false");
         }
       });
     </script>

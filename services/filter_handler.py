@@ -1,5 +1,7 @@
 from qdrant_client.http.models import FieldCondition, MatchValue
-from typing import Any, Callable
+from typing import Any, Callable, List
+
+from models.query_request import QueryFilters
 
 
 class FilterHandler:
@@ -14,7 +16,7 @@ class FilterHandler:
             raise ValueError(f"Uknown filter: {filter_name}")
         return self._registry[filter_name](filter_value)
 
-    def apply_filters(self, user_filters):
+    def apply_filters(self, user_filters: QueryFilters) -> List:
         conditions = []
         for field_name in dir(user_filters):
             if field_name.startswith("_"):
