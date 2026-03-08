@@ -23,5 +23,5 @@ class DatabaseConfig:
             database="./infrastructure/databases/sqlite/local.db",
             sync_url=self._db_url,
             auth_token=self._db_auth_token,
+            sync_interval=60,
         )
-        self.client.sync()

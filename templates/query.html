@@ -5,16 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Latafarraqo Vector Search</title>
     <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-      crossorigin
-    />
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap"
       rel="stylesheet"
@@ -38,12 +30,13 @@
           <div class="brand-text">
             <p class="eyebrow">Latafarraqo Platform</p>
             <h1>Vector Search Studio</h1>
-            <p class="subtitle">Precision retrieval with structured filters and JSON-first output.</p>
+            <p class="subtitle">
+              Precision retrieval with structured filters and JSON-first output.
+            </p>
           </div>
         </div>
         <div class="header-actions">
-          <a class="ghost-link" href="#">Docs</a>
-          <a class="ghost-link" href="#">API</a>
+          <a class="ghost-link" href="/docs">Docs</a>
           <a class="header-cta" href="#main">Start a query</a>
         </div>
       </header>
@@ -53,12 +46,15 @@
           <p class="eyebrow">Search layer for enterprise knowledge</p>
           <h2>Build an intelligent retrieval program in minutes.</h2>
           <p class="hero-subtitle">
-            Query across departments, narrow by time, and ship clean JSON to every
-            downstream app. Designed for analysts and engineers who need answers fast.
+            Query across departments, narrow by time, and ship clean JSON to
+            every downstream app. Designed for analysts and engineers who need
+            answers fast.
           </p>
           <div class="hero-actions">
             <a class="primary-btn" href="#main">Run a query</a>
-            <button class="secondary-btn" type="button">View sample output</button>
+            <button class="secondary-btn" type="button">
+              View sample output
+            </button>
           </div>
           <div class="hero-points">
             <div>
@@ -71,7 +67,9 @@
             </div>
             <div>
               <span class="point-title">Safe by design</span>
-              <span class="point-sub">Clear bounds and predictable outputs</span>
+              <span class="point-sub"
+                >Clear bounds and predictable outputs</span
+              >
             </div>
           </div>
         </div>
@@ -102,7 +100,10 @@
         <section class="panel form-panel">
           <div class="panel-header">
             <h2>Ask a Question</h2>
-            <p>Return the best matches with optional departmental and time bounds.</p>
+            <p>
+              Return the best matches with optional departmental and time
+              bounds.
+            </p>
           </div>
           <form id="queryForm">
             <div class="form-row">
@@ -120,7 +121,11 @@
 
             <div class="form-row">
               <label for="departmentSelect">Department</label>
-              <select id="departmentSelect" name="department" autocomplete="off">
+              <select
+                id="departmentSelect"
+                name="department"
+                autocomplete="off"
+              >
                 <option value="">No Filter</option>
                 {% for dep in departments %}
                 <option value="{{ dep }}">{{ dep }}</option>
@@ -152,7 +157,8 @@
               </div>
 
               <div class="help-text">
-                Dates are sent as RFC3339 (UTC). Leaving either blank means no bound.
+                Dates are sent as RFC3339 (UTC). Leaving either blank means no
+                bound.
               </div>
             </fieldset>
 
@@ -169,7 +175,9 @@
           <div class="result-footer">
             <div>
               <span class="meta-label">Tip</span>
-              <span class="meta-text">Use a precise department to narrow relevance.</span>
+              <span class="meta-text"
+                >Use a precise department to narrow relevance.</span
+              >
             </div>
             <div>
               <span class="meta-label">Output</span>
@@ -182,7 +190,10 @@
       <section class="feature-grid" aria-label="Highlights">
         <article>
           <h3>Fast validation</h3>
-          <p>Get immediate feedback on filters before shipping results downstream.</p>
+          <p>
+            Get immediate feedback on filters before shipping results
+            downstream.
+          </p>
         </article>
         <article>
           <h3>Confidence checks</h3>

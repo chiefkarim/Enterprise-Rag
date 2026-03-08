@@ -16,7 +16,7 @@ pipeline_start = time.perf_counter()
 # --- Read documents ---
 start = time.perf_counter()
 reader = SimpleDirectoryReader(
-    input_dir="./test_data/",
+    input_dir="./test_data/departments/hr",
     file_metadata=file_metadata,
     recursive=True,
 )
@@ -34,7 +34,7 @@ stage_timer("Sentence splitting / node creation", start)
 
 # --- Initialize vector store ---
 start = time.perf_counter()
-provider = VectorStoreProvider(collection_name="company")
+provider = VectorStoreProvider()
 vector_store = provider.get_vector_store()
 stage_timer("Vector store initialization", start)
 

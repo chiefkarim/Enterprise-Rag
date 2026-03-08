@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from llama_index.embeddings.fastembed import FastEmbedEmbedding
 from llama_index.vector_stores.qdrant import QdrantVectorStore
 from .databases.vector_db import QdrantConfig
@@ -5,6 +6,8 @@ from llama_index.core import (
     Settings,
     StorageContext,
 )
+
+load_dotenv()
 
 
 class VectorStoreProvider:
@@ -15,7 +18,7 @@ class VectorStoreProvider:
 
         Settings.embed_model = FastEmbedEmbedding(
             model_name="BAAI/bge-small-en-v1.5",
-            local_files_only=False,
+            local_files_only=True,
         )
 
         self._vector_store = QdrantVectorStore(

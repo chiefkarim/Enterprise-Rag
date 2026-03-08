@@ -15,8 +15,12 @@ class QdrantConfig:
             raise ValueError("QDRANT_ENDPOINT is None")
 
         self.aclient = AsyncQdrantClient(
-            url=self.qdrant_endpoint, api_key=self.qdrant_api_key
+            url=self.qdrant_endpoint,
+            api_key=self.qdrant_api_key,
+            timeout=60,
         )
         self.client = QdrantClient(
-            url=self.qdrant_endpoint, api_key=self.qdrant_api_key
+            url=self.qdrant_endpoint,
+            api_key=self.qdrant_api_key,
+            timeout=60,
         )

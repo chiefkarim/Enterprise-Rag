@@ -98,7 +98,11 @@ p {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.18), transparent 40%),
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(255, 255, 255, 0.18),
+      transparent 40%
+    ),
     radial-gradient(circle at 85% 0%, rgba(43, 179, 164, 0.35), transparent 50%);
   pointer-events: none;
 }
@@ -413,7 +417,6 @@ fieldset {
   padding: 16px;
   border-radius: 14px;
   border: 1px solid var(--line);
-  background: var(--surface-2);
 }
 
 legend {
@@ -476,7 +479,8 @@ button#submitBtn:disabled {
   background: #f9fbff;
   min-height: 200px;
   white-space: pre-wrap;
-  font-family: "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, monospace;
+  font-family:
+    "IBM Plex Mono", "SFMono-Regular", ui-monospace, Menlo, monospace;
   font-size: 13px;
   color: #0b1226;
   overflow-x: auto;

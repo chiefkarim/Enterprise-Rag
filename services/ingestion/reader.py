@@ -14,6 +14,7 @@ def serialize_metadata(md: FileMetadata) -> dict[str, Any]:
     return {
         "department": md["department"].value,
         "created_at": md["created_at"],
+        "project_id": 1,
     }
 
 
