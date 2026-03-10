@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 import os
+from sys import meta_path
 from typing import Any, TypedDict
 
 from models.department import Department
@@ -10,18 +11,23 @@ class FileMetadata(TypedDict):
     created_at: str | None
 
 
-def serialize_metadata(md: FileMetadata) -> dict[str, Any]:
-    return {
+def serialize_metadata(md: FileMetadata, project_id: str | None) -> dict[str, Any]:
+    metadata = {
         "department": md["department"].value,
         "created_at": md["created_at"],
-        "project_id": 1,
     }
+    if project_id is not None:
+        metadata["project_id"] = project_id
+
+    return metadata
 
 
-def file_metadata(file_path: str, department) -> dict[str, Any]:
+def file_metadata(
+    file_path: str, department: Department, project_id: str | None
+) -> dict[str, Any]:
     result = department_extractor(department)
     result = fille_metadata_extractor(file_path, result)
-    result = serialize_metadata(result)
+    result = serialize_metadata(result, project_id)
 
     print(result)
     return result

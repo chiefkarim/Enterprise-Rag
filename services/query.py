@@ -13,7 +13,7 @@ def query(
     query: str,
     user_filters: Optional[QueryFilters] = None,
 ):
-    filters = QueryFilters()
+    filters = None
 
     if user_filters:
         filter_handler = FilterHandlerFactory().filter_handler
