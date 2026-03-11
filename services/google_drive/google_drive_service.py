@@ -38,4 +38,4 @@ class GoogleDriveService:
             print(f"Download {int(status.progress() * 100)}%.")
 
         print(f"Download complete: {file_name}")
-        return output_dir
+        return output_path
