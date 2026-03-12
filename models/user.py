@@ -5,6 +5,8 @@ from pydantic import BaseModel, ConfigDict
 class User(BaseModel):
     id: int
     name: str
+    email: str | None = None
+    role: str = "user"
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)

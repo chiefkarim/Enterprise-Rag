@@ -31,9 +31,9 @@ def get_password_hash(password: str) -> str:
 
 
 def authenticate_user(
-    db: sqlite3.Connection, username: str, password: str
+    db: sqlite3.Connection, email: str, password: str
 ) -> UserInDB | None:
-    user = users_repo.get_user_by_name(db, username)
+    user = users_repo.get_user_by_email(db, email)
     if not user:
         return None
     if not verify_password(password, user.hashed_password):
@@ -66,10 +66,10 @@ async def get_current_user(
         sub = payload.get("sub")
         if sub is None:
             raise credentials_exception
-        username: str = str(sub)
+        email: str = str(sub)
     except InvalidTokenError:
         raise credentials_exception
-    user = users_repo.get_user_by_name(db, username)
+    user = users_repo.get_user_by_email(db, email)
     if user is None:
         raise credentials_exception
     return user
