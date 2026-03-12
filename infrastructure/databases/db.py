@@ -25,3 +25,4 @@ class DatabaseConfig:
             auth_token=self._db_auth_token,
             sync_interval=60,
         )
+        self.client.sync()

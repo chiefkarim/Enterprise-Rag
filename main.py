@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 from routes.projects import router as projects_router
 from routes.users import router as users_router
 from routes.users_projects import router as users_projects_router
+from routes.auth import router as auth_router
 from services.google_drive.google_drive_service import GoogleDriveService
 from services.ingestion.embed import embed as embed_service
 
@@ -34,6 +35,7 @@ app = FastAPI(lifespan=lifespan)
 templates = Jinja2Templates(directory="templates")
 
 app.mount("/static", StaticFiles(directory="./static/"), name="static")
+app.include_router(auth_router)
 app.include_router(projects_router)
 app.include_router(users_router)
 app.include_router(users_projects_router)

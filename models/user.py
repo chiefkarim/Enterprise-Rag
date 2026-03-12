@@ -10,6 +10,12 @@ class User(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class UserInDB(User):
+    hashed_password: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class UserProject(BaseModel):
     user_id: int
     project_id: int
