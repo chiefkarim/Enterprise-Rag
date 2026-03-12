@@ -8,7 +8,7 @@ from pwdlib import PasswordHash
 from pwdlib.hashers.argon2 import Argon2Hasher
 import sqlite3
 from deps import get_db
-from models.user import UserInDB
+from models.user import UserInDB, User
 from repositories import users as users_repo
 import os
 
@@ -40,6 +40,24 @@ def authenticate_user(
         return None
     return user
 
+
+def register_user(
+    db: sqlite3.Connection, name: str, email: str, password: str
+) -> User:
+    existing_user = users_repo.get_user_by_email(db, email)
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered",
+        )
+    hashed_password = get_password_hash(password)
+    users = users_repo.create_user(
+        db, name=name, email=email, role="user", hashed_password=hashed_password
+    )
+    # create_user returns a list, so we take the first element
+    if not users:
+        raise HTTPException(status_code=500, detail="Failed to create user")
+    return users[0]
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     to_encode = data.copy()

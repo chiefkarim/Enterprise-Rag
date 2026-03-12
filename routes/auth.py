@@ -4,13 +4,26 @@ from typing import Annotated
 from datetime import timedelta
 from deps import get_db
 import sqlite3
-from services.auth import authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from services.auth import authenticate_user, register_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from models.user import User
 
 router = APIRouter(tags=["Authentication"])
 
 class LoginRequest(BaseModel):
     email: str
     password: str
+
+class SignUpRequest(BaseModel):
+    name: str
+    email: str
+    password: str
+
+@router.post("/signup", response_model=User)
+async def sign_up(
+    payload: SignUpRequest,
+    db: sqlite3.Connection = Depends(get_db)
+):
+    return register_user(db, payload.name, payload.email, payload.password)
 
 @router.post("/login")
 async def login_for_access_token(
