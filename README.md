@@ -1,56 +1,73 @@
-# Low-Budget RAG Pipeline for Small Companies
+# Enterprise RAG Platform
 
-This repository contains the Python implementation of a Retrieval Augmented Generation (RAG) pipeline designed for low-budget scenarios, as detailed in the accompanying blog post. It leverages `llama_index` with efficient tools like `FastEmbedEmbedding` for embeddings, `SentenceTransformerRerank` for re-ranking, and `Ollama` for local language model interaction.
+This repository contains the implementation of a Retrieval Augmented Generation (RAG) platform designed for low-budget and enterprise-grade scenarios. It features a modern React frontend and a robust Python (FastAPI + LlamaIndex) backend.
 
-## Blog Post
+## Project Structure
 
-This project is an implementation of the concepts discussed in the Medium blog post: [Low-Budget RAG pipeline for your small company](https://mennakarim.medium.com/low-budget-rag-pipeline-for-your-small-company-43e9c30cf502).
+This project is structured as a **pnpm monorepo**, containing two distinct applications:
+
+- **`apps/frontend`**: A modern React SPA built with Vite, TanStack Query, Zustand, Zod, and shadcn-ui.
+- **`apps/backend`**: The core RAG engine and API server built with FastAPI, LlamaIndex, FastEmbedEmbedding, and Ollama/Qwen.
 
 ---
 
-## Project Overview
+## 🚀 Getting Started
 
-This project implements a Retrieval Augmented Generation (RAG) system using `llama_index`. It enables users to embed documents from a specified directory, build a vector store index, and then perform queries against this index. The system leverages `FastEmbedEmbedding` for efficient embeddings, `SentenceTransformerRerank` for re-ranking retrieved nodes, and `Ollama` for interacting with a local language model.
+### 1. Prerequisites
+- **Node.js** (v20+)
+- **pnpm** (v9+)
+- **uv** (Python package installer and resolver)
+- **Ollama** (Running locally on `127.0.0.1:11434` with model `qwen2.5:0.5b` or similar)
 
-## Building and Running
-
-### Setup
-
-1.  **Install Dependencies**: This project uses Python and relies on `llama_index` and other related libraries. A `requirements.txt` file is not provided, but the key libraries observed are `llama_index` (with integrations for `FastEmbedEmbedding` and `Ollama`) and `numpy`.
-    - **TODO**: Create a `requirements.txt` file or list the exact pip install commands for all dependencies.
-2.  **Ollama**: Ensure Ollama is installed and running, as the `rag.py` and `retriever.py` scripts are configured to use an Ollama instance at `127.0.0.1:11434`. You may also need to pull the `qwen3:0.6b` model used in `rag.py` and `retriever.py`.
-
-### Indexing Data
-
-The `embed.py` script processes documents from the `./test_data/` directory and creates a persistent vector store index in the `./indexed-data/` directory.
+### 2. Setup the Frontend
+The frontend uses a feature-driven layered architecture for maximum scalability.
 
 ```bash
-python embed.py
+# Navigate to the frontend directory
+cd apps/frontend
+
+# Install dependencies
+pnpm install
+
+# Start the development server
+pnpm run dev
 ```
+The React app will be available at `http://localhost:5173/`.
 
-### Running Queries
+### 3. Setup the Backend
+The backend utilizes `uv` for lightning-fast dependency management and virtual environments.
 
-- **Full RAG Pipeline (Query LLM)**: The `rag.py` script executes a full RAG pipeline, retrieving relevant information and then querying the configured LLM (Ollama).
+```bash
+# Navigate to the backend directory
+cd apps/backend
 
-  ```bash
-  python rag.py
-  ```
+# Install dependencies and create a virtual environment (.venv)
+uv sync
 
-- **Document Retrieval**: The `query.py` script demonstrates how to retrieve relevant documents based on a query. The results are saved to `tmp_result.json`.
+# Run the FastAPI server in development mode
+source .venv/bin/activate
+fastapi dev main.py
+```
+The backend API documentation is available at `http://localhost:8000/docs`.
 
-  ```bash
-  python query.py
-  ```
+---
 
-- **Retrieval with Reranking**: The `retriever.py` script demonstrates document retrieval followed by re-ranking using a `SentenceTransformerRerank` model. The re-ranked results are saved to `tmp_reranked.json`.
+## Architecture & Conventions
 
-  ```bash
-  python retriever.py
-  ```
+### Frontend Architecture
+- **Framework**: React 19 + Vite + TypeScript.
+- **Components**: `shadcn-ui` (Tailwind CSS v4).
+- **State Management**: `Zustand` for global state (Auth), `TanStack Query` for server state and caching.
+- **Validation**: `Zod` combined with `react-hook-form`.
+- **Structure**: Based on a generic Feature-Driven Architecture (code split by feature domain in `src/features/*`).
 
-## Development Conventions
+### Backend Architecture
+- **Framework**: `FastAPI` providing high-performance async endpoints.
+- **RAG Engine**: `llama_index` handling document chunking, indexing, and retrieval.
+- **Vector Store**: Processed documents reside in `./indexed-data/` locally.
+- **Authentication**: Custom JWT Authentication using Argon2 password hashing.
 
-- **Framework**: The project heavily utilizes the `llama_index` framework for RAG functionalities.
-- **Data Storage**: Indexed data (vector store) is persisted in the `./indexed-data/` directory.
-- **Test Data**: Raw documents for indexing are expected to be placed in the `./test_data/` directory.
-- **JSON Output**: Helper functions in `utils.py` are used for serializing and dumping Python objects to JSON files, primarily for inspecting retrieval and re-ranking results.
+---
+
+## Blog Post Reference
+The foundational RAG logic of this project implements concepts discussed in the Medium blog post: [Low-Budget RAG pipeline for your small company](https://mennakarim.medium.com/low-budget-rag-pipeline-for-your-small-company-43e9c30cf502).

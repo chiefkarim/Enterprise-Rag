@@ -212,3 +212,16 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 GEMINI.md
+
+# Node.js / Frontend
+node_modules/
+dist/
+.pnpm-store/
+*.local
+
+# Vite
+apps/frontend/dist/
+apps/frontend/.vite/
+
+# pnpm
+pnpm-debug.log*
