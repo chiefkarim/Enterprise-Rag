@@ -4,7 +4,7 @@ from typing import Annotated
 from datetime import timedelta
 from deps import get_db
 import sqlite3
-from features.auth.service import authenticate_user, register_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from features.auth.service import authenticate_user, register_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, get_current_user
 from features.users.models import User
 
 router = APIRouter(tags=["Authentication"])
@@ -42,3 +42,9 @@ async def login_for_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get("/users/me", response_model=User)
+async def get_me(current_user: User = Depends(get_current_user)):
+    return current_user
+

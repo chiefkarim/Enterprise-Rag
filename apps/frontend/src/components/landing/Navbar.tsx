@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const NAV_LINKS = [
   { label: "Features", href: "#features" },
@@ -61,18 +62,18 @@ export default function Navbar() {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <a
-              href="/login"
+            <Link
+              to="/signin"
               className="text-white/80 hover:text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-white/10 transition-all duration-200"
             >
               Login
-            </a>
-            <a
-              href="/signup"
+            </Link>
+            <Link
+              to="/signin"
               className="bg-gradient-to-r from-[#5DD7AD] to-[#3ab88e] text-[#0a1628] text-sm font-bold px-5 py-2 rounded-lg hover:shadow-lg hover:shadow-[#5DD7AD]/25 hover:scale-105 transition-all duration-200"
             >
               Get Started Free
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -99,18 +100,20 @@ export default function Navbar() {
             </a>
           ))}
           <div className="flex flex-col gap-3 pt-2">
-            <a
-              href="/login"
+            <Link
+              to="/signin"
+              onClick={() => setMenuOpen(false)}
               className="text-center text-white/80 text-sm font-medium px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 transition-all"
             >
               Login
-            </a>
-            <a
-              href="/signup"
+            </Link>
+            <Link
+              to="/signin"
+              onClick={() => setMenuOpen(false)}
               className="text-center bg-gradient-to-r from-[#5DD7AD] to-[#3ab88e] text-[#0a1628] text-sm font-bold px-5 py-2.5 rounded-lg"
             >
               Get Started Free
-            </a>
+            </Link>
           </div>
         </div>
       )}
