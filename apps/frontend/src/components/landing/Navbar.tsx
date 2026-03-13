@@ -69,7 +69,7 @@ export default function Navbar() {
               Login
             </Link>
             <Link
-              to="/signin"
+              to="/signup"
               className="bg-gradient-to-r from-[#5DD7AD] to-[#3ab88e] text-[#0a1628] text-sm font-bold px-5 py-2 rounded-lg hover:shadow-lg hover:shadow-[#5DD7AD]/25 hover:scale-105 transition-all duration-200"
             >
               Get Started Free
@@ -108,7 +108,7 @@ export default function Navbar() {
               Login
             </Link>
             <Link
-              to="/signin"
+              to="/signup"
               onClick={() => setMenuOpen(false)}
               className="text-center bg-gradient-to-r from-[#5DD7AD] to-[#3ab88e] text-[#0a1628] text-sm font-bold px-5 py-2.5 rounded-lg"
             >
