@@ -1,7 +1,7 @@
 test_data/
 indexed-data/**
 tmp_*
-infrastructure/databases/sqlite/
+sqlite/
 
 .env*
 # Byte-compiled / optimized / DLL files
