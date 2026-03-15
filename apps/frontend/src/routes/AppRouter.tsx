@@ -3,6 +3,8 @@ import LandingPage from '@/pages/LandingPage';
 import SignInPage from '@/pages/SignInPage';
 import SignUpPage from '@/pages/SignUpPage';
 import DashboardPage from '@/pages/DashboardPage';
+import DocumentsPage from '@/pages/DocumentsPage';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 import { useAuthStore } from '@/stores/authStore';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -46,14 +48,20 @@ export const AppRouter = () => {
             </PublicRoute>
           }
         />
+        
+        {/* Dashboard Routes with Layout */}
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <DashboardPage />
+              <DashboardLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<DashboardPage />} />
+          <Route path="documents" element={<DocumentsPage />} />
+        </Route>
+        
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
