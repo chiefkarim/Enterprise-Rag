@@ -27,5 +27,6 @@ export type User = z.infer<typeof userSchema>;
 
 export interface LoginResponse {
   access_token: string;
+  refresh_token: string;
   token_type: string;
 }

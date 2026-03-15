@@ -4,7 +4,18 @@ from typing import Annotated
 from datetime import timedelta
 from deps import get_db
 import sqlite3
-from features.auth.service import authenticate_user, register_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, get_current_user
+import jwt
+from features.users import repository as users_repo
+from features.auth.service import (
+    authenticate_user, 
+    register_user, 
+    create_access_token, 
+    create_refresh_token,
+    ACCESS_TOKEN_EXPIRE_MINUTES, 
+    get_current_user,
+    ALGORITHM,
+    SECRET_KEY
+)
 from features.users.models import User
 
 router = APIRouter(tags=["Authentication"])
@@ -41,7 +52,59 @@ async def login_for_access_token(
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    refresh_token = create_refresh_token(
+        data={"sub": user.email}
+    )
+    return {
+        "access_token": access_token, 
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
+
+
+class RefreshRequest(BaseModel):
+    refresh_token: str
+
+@router.post("/refresh")
+async def refresh_token(
+    payload: RefreshRequest,
+    db: sqlite3.Connection = Depends(get_db)
+):
+    try:
+        token_payload = jwt.decode(payload.refresh_token, str(SECRET_KEY), algorithms=[ALGORITHM])
+        if token_payload.get("type") != "refresh":
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token type",
+            )
+        sub = token_payload.get("sub")
+        if sub is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token payload",
+            )
+        email: str = str(sub)
+    except jwt.PyJWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate refresh token",
+        )
+    
+    user = users_repo.get_user_by_email(db, email)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found",
+        )
+    
+    new_access_token = create_access_token(data={"sub": user.email})
+    new_refresh_token = create_refresh_token(data={"sub": user.email})
+    
+    return {
+        "access_token": new_access_token,
+        "refresh_token": new_refresh_token,
+        "token_type": "bearer"
+    }
 
 
 @router.get("/users/me", response_model=User)
