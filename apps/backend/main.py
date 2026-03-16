@@ -34,6 +34,7 @@ from features.user_projects.routes import router as users_projects_router
 from features.auth.routes import router as auth_router
 from features.departments.routes import router as departments_router
 from features.documents.routes import router as documents_router
+from features.query.chat_routes import router as chat_router
 
 app = FastAPI(lifespan=lifespan)
 
@@ -56,6 +57,7 @@ app.include_router(users_router)
 app.include_router(users_projects_router)
 app.include_router(departments_router)
 app.include_router(documents_router)
+app.include_router(chat_router)
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request, db: sqlite3.Connection = Depends(get_db)):
