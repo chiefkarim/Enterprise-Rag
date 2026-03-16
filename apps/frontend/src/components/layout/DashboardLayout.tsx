@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from '@/features/auth/stores/authStore';
 import { getMe } from '@/features/auth/api/userApi';
 import { Sidebar } from './dashboard/Sidebar';
 import { Topbar } from './dashboard/Topbar';

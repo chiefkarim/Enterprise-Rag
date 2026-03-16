@@ -1,24 +1,10 @@
 import { axiosInstance } from '@/api/axios';
-
-export interface Document {
-  id: number;
-  file_name: string;
-  state: 'pending' | 'embedded' | 'failed';
-  source_file_update_at: string;
-  created_at: string;
-  updated_at: string;
-}
+import type { Document, EmbedRequest } from '../types';
 
 export const getDocuments = async (): Promise<Document[]> => {
   const { data } = await axiosInstance.get<Document[]>('/documents/');
   return data;
 };
-
-export interface EmbedRequest {
-  file_ids: string[];
-  department?: string;
-  project_id?: string;
-}
 
 export const embedDocuments = async (payload: EmbedRequest): Promise<void> => {
   const requestData: Record<string, any> = {

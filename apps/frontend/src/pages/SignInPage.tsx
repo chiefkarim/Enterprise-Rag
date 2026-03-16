@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { loginSchema, type LoginRequest } from '@/features/auth/types';
 import { login } from '@/features/auth/api/authApi';
 import { getMe } from '@/features/auth/api/userApi';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from '@/features/auth/stores/authStore';
 
 export default function SignInPage() {
   const navigate = useNavigate();

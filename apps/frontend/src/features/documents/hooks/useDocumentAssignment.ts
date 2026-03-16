@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { FileItem, EmbedGroup } from '../components/AssignmentModal';
+import type { FileItem, EmbedGroup } from '../types';
 
 export function useDocumentAssignment(files: FileItem[], isOpen: boolean) {
   const [fileAssignments, setFileAssignments] = useState<Record<string, string>>({});

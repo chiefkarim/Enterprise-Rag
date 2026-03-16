@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import ReactGoogleDrivePicker from 'react-google-drive-picker';
 import { embedDocuments } from '../api/documentsApi';
-import type { EmbedGroup } from '../components/AssignmentModal';
+import type { EmbedGroup, FileItem } from '../types';
 
 const useDrivePicker = (ReactGoogleDrivePicker as any).useDrivePicker || (ReactGoogleDrivePicker as any).default || ReactGoogleDrivePicker;
 
@@ -65,7 +65,7 @@ export function useDocumentActions() {
       await Promise.all(
         groups.map(group => {
           const payload: { file_ids: string[]; department?: string; project_id?: string } = {
-            file_ids: group.files.map(f => f.id)
+            file_ids: group.files.map((f: FileItem) => f.id)
           };
           if (group.department) {
             payload.department = group.department;

@@ -1,6 +1,6 @@
 import { LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from '@/features/auth/stores/authStore';
 import type { User } from '@/features/auth/types';
 
 export function UserMenu({ user }: { user: User | null | undefined }) {

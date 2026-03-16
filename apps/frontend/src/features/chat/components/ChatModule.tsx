@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Trash2, User, Bot, Loader2 } from 'lucide-react';
-import { useChatStore, type Message } from '@/stores/chatStore';
-import { useAuthStore } from '@/stores/authStore';
+import { useChatStore } from '../stores/chatStore';
 import { Markdown } from './Markdown';
+import { useChatStream } from '../hooks/useChatStream';
 
 export const ChatModule: React.FC = () => {
-  const { messages, addMessage, updateLastAssistantMessage, clearChat } = useChatStore();
-  const { accessToken } = useAuthStore();
+  const { messages, clearChat } = useChatStore();
+  const { sendMessage, isLoading } = useChatStream();
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,82 +20,9 @@ export const ChatModule: React.FC = () => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input,
-      timestamp: new Date().toISOString(),
-    };
-
-    addMessage(userMessage);
+    const currentInput = input;
     setInput('');
-    setIsLoading(true);
-
-    try {
-      const response = await fetch('http://localhost:8000/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ 
-          query: input,
-          history: messages.map(m => ({
-            role: m.role,
-            content: m.content
-          }))
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to fetch');
-
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: '',
-        timestamp: new Date().toISOString(),
-      };
-      addMessage(assistantMessage);
-
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-
-      if (reader) {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split('\n');
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const dataStr = line.replace('data: ', '').trim();
-              if (dataStr === '[DONE]') break;
-              
-              try {
-                const data = JSON.parse(dataStr);
-                if (data.token) {
-                  updateLastAssistantMessage(data.token);
-                }
-              } catch (e) {
-                console.error('Error parsing JSON from stream', e);
-              }
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Chat error:', error);
-      addMessage({
-        id: (Date.now() + 2).toString(),
-        role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
-        timestamp: new Date().toISOString(),
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await sendMessage(currentInput);
   };
 
   return (

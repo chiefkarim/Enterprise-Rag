@@ -6,7 +6,7 @@ import { Eye, EyeOff, Loader2, UserPlus, Sparkles, AlertCircle, CheckCircle2 } f
 import { useState } from 'react';
 import { signUpSchema, type SignUpRequest } from '@/features/auth/types';
 import { signup } from '@/features/auth/api/authApi';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from '@/features/auth/stores/authStore';
 
 export default function SignUpPage() {
   const navigate = useNavigate();

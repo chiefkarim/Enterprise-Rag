@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from '@/features/auth/stores/authStore';
 import { ChatModule } from '@/features/chat/components/ChatModule';
 
 export default function DashboardPage() {

@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/Table';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import type { Document } from '../api/documentsApi';
+import type { Document } from '../types';
 
 interface DocumentTableProps {
   documents: Document[] | undefined;

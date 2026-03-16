@@ -5,7 +5,7 @@ import SignUpPage from '@/pages/SignUpPage';
 import DashboardPage from '@/pages/DashboardPage';
 import DocumentsPage from '@/pages/DocumentsPage';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from '@/features/auth/stores/authStore';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const accessToken = useAuthStore((state) => state.accessToken);
