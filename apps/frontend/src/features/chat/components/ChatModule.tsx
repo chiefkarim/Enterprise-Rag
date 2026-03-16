@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, Trash2, User, Bot, Loader2 } from 'lucide-react';
 import { useChatStore, type Message } from '@/stores/chatStore';
 import { useAuthStore } from '@/stores/authStore';
+import { Markdown } from './Markdown';
 
 export const ChatModule: React.FC = () => {
   const { messages, addMessage, updateLastAssistantMessage, clearChat } = useChatStore();
@@ -143,7 +144,11 @@ export const ChatModule: React.FC = () => {
                   ? 'bg-blue-600/20 text-white rounded-tr-none' 
                   : 'bg-white/5 text-white/90 rounded-tl-none border border-white/5'
               }`}>
-                {m.content || (isLoading && m.role === 'assistant' && <Loader2 className="w-4 h-4 animate-spin" />)}
+                {m.role === 'user' ? (
+                  m.content
+                ) : (
+                  m.content ? <Markdown content={m.content} /> : (isLoading && <Loader2 className="w-4 h-4 animate-spin" />)
+                )}
               </div>
               <span className="text-[10px] text-white/20 uppercase tracking-wider">
                 {new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
