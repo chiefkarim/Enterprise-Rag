@@ -3,7 +3,8 @@ from llama_index.core import (
     Settings,
 )
 from llama_index.core.postprocessor import SentenceTransformerRerank
-from llama_index.llms.ollama import Ollama
+from llama_index.llms.openrouter import OpenRouter
+from infrastructure.config import get_settings
 from llama_index.core.base.response.schema import StreamingResponse
 
 from infrastructure.vector_store_provider import VectorStoreProvider
@@ -17,8 +18,10 @@ reranking_post_processor = SentenceTransformerRerank(
     top_n=3,
 )
 
-Settings.llm = Ollama(
-    model="qwen3:0.6b", request_timeout=3000, base_url="127.0.0.1:11434", thinking=False
+settings = get_settings()
+Settings.llm = OpenRouter(
+    model="google/gemini-2.0-flash-001",
+    api_key=settings.OPENROUTER_API_KEY
 )
 
 query_engine = index.as_query_engine(
