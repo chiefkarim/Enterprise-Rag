@@ -62,7 +62,7 @@ export default function AssignmentModal({
   const hasAssigned = files.length > unassignedFiles.length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="dark fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <Card className="w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header */}
@@ -123,7 +123,7 @@ export default function AssignmentModal({
           </div>
 
           {/* Right Column: Drop Targets */}
-          <div className="w-full lg:w-2/3 flex flex-col bg-background/50">
+          <div className="w-full lg:w-2/3 flex flex-col bg-[#0a1628]/50">
             <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
               
               {/* Departments */}
@@ -143,7 +143,7 @@ export default function AssignmentModal({
                         onDragOver={handleDragOver}
                         onDrop={(e) => handleDrop(e, targetId)}
                         className={`border rounded-xl p-4 transition-all duration-200 
-                          ${draggedFileId ? 'border-primary/30 bg-primary/5' : 'border-border bg-white/5'}
+                          ${draggedFileId ? 'border-primary/30 bg-primary/10' : 'border-white/10 bg-white/5'}
                         `}
                       >
                         <div className="flex items-center justify-between mb-2">
@@ -153,7 +153,7 @@ export default function AssignmentModal({
                         <div className="space-y-1.5 min-h-[40px] rounded-lg p-1">
                           {assignedList.length === 0 ? (
                             <div className="h-full flex items-center justify-center">
-                              <span className="text-xs text-white/30">Drop files here</span>
+                              <span className="text-xs text-white/50">Drop files here</span>
                             </div>
                           ) : (
                             assignedList.map(f => (
@@ -162,7 +162,7 @@ export default function AssignmentModal({
                                 draggable
                                 onDragStart={(e) => handleDragStart(e, f.id)}
                                 onDragEnd={handleDragEnd}
-                                className="bg-background border border-border rounded px-2 py-1.5 flex items-center gap-2 cursor-grab active:cursor-grabbing text-xs text-white/80 hover:bg-white/5"
+                                className="bg-black/40 border border-white/10 rounded px-2 py-1.5 flex items-center gap-2 cursor-grab active:cursor-grabbing text-xs text-white/80 hover:bg-white/5"
                               >
                                 <GripVertical className="w-3 h-3 text-white/30" />
                                 <span className="truncate" title={f.name}>{f.name}</span>
@@ -193,7 +193,7 @@ export default function AssignmentModal({
                         onDragOver={handleDragOver}
                         onDrop={(e) => handleDrop(e, targetId)}
                         className={`border rounded-xl p-4 transition-all duration-200 
-                          ${draggedFileId ? 'border-indigo-500/30 bg-indigo-500/5' : 'border-border bg-white/5'}
+                          ${draggedFileId ? 'border-indigo-500/30 bg-indigo-500/10' : 'border-white/10 bg-white/5'}
                         `}
                       >
                         <div className="flex items-center justify-between mb-2">
@@ -203,7 +203,7 @@ export default function AssignmentModal({
                         <div className="space-y-1.5 min-h-[40px] rounded-lg p-1">
                           {assignedList.length === 0 ? (
                             <div className="h-full flex items-center justify-center">
-                              <span className="text-xs text-white/30">Drop files here</span>
+                              <span className="text-xs text-white/50">Drop files here</span>
                             </div>
                           ) : (
                             assignedList.map(f => (
@@ -212,7 +212,7 @@ export default function AssignmentModal({
                                 draggable
                                 onDragStart={(e) => handleDragStart(e, f.id)}
                                 onDragEnd={handleDragEnd}
-                                className="bg-background border border-border rounded px-2 py-1.5 flex items-center gap-2 cursor-grab active:cursor-grabbing text-xs text-white/80 hover:bg-white/5"
+                                className="bg-black/40 border border-white/10 rounded px-2 py-1.5 flex items-center gap-2 cursor-grab active:cursor-grabbing text-xs text-white/80 hover:bg-white/5"
                               >
                                 <GripVertical className="w-3 h-3 text-white/30" />
                                 <span className="truncate" title={f.name}>{f.name}</span>

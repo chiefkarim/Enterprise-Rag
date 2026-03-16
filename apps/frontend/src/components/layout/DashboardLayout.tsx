@@ -24,7 +24,7 @@ export default function DashboardLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a1628] text-white flex relative overflow-hidden">
+    <div className="dark min-h-screen bg-[#0a1628] text-white flex relative overflow-hidden">
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#122663] via-[#0a1628] to-[#0d2040] pointer-events-none" />
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#5DD7AD]/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4 pointer-events-none" />
