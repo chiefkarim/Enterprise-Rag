@@ -8,10 +8,6 @@ from llama_index.core.chat_engine.types import ChatMode
 from llama_index.core.postprocessor import SentenceTransformerRerank
 from llama_index.llms.openrouter import OpenRouter
 from infrastructure.config import get_settings
-from llama_index.core.base.response.schema import (
-    StreamingResponse as LlamaStreamingResponse,
-    AsyncStreamingResponse as LlamaAsyncStreamingResponse,
-)
 from llama_index.core.llms import ChatMessage as LlamaChatMessage
 import json
 import logging
@@ -81,17 +77,11 @@ async def chat(
 
     async def event_generator():
         try:
-            # Use the asynchronous achat to avoid blocking the event loop
-            llm_response = await chat_engine.achat(payload.query, chat_history=chat_history)
+            # Use astream_chat for real-time streaming
+            llm_response = await chat_engine.astream_chat(payload.query, chat_history=chat_history)
 
-            if isinstance(llm_response, LlamaAsyncStreamingResponse):
-                async for token in llm_response.response_gen:
-                    yield f"data: {json.dumps({'token': token})}\n\n"
-            elif isinstance(llm_response, LlamaStreamingResponse):
-                for token in llm_response.response_gen:
-                    yield f"data: {json.dumps({'token': token})}\n\n"
-            else:
-                yield f"data: {json.dumps({'token': str(llm_response)})}\n\n"
+            async for token in llm_response.async_response_gen():
+                yield f"data: {json.dumps({'token': token})}\n\n"
 
             yield "data: [DONE]\n\n"
         except Exception as e:
