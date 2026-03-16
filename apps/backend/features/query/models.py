@@ -18,6 +18,12 @@ class QueryFilters(BaseModel):
     must_not: list[QueryFields | QueryFilters] = Field(default_factory=list)
 
 
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+
 class QueryRequest(BaseModel):
     filters: Optional[QueryFilters] = None
     query: str = Field(min_length=1)
+    history: Optional[list[ChatMessage]] = Field(default_factory=list)

@@ -4,6 +4,7 @@ from features.query.models import QueryRequest
 from deps import get_vector_store
 from infrastructure.vector_store_provider import VectorStoreProvider
 from llama_index.core import VectorStoreIndex, Settings
+from llama_index.core.chat_engine.types import ChatMode
 from llama_index.core.postprocessor import SentenceTransformerRerank
 from llama_index.llms.openrouter import OpenRouter
 from infrastructure.config import get_settings
@@ -11,10 +12,9 @@ from llama_index.core.base.response.schema import (
     StreamingResponse as LlamaStreamingResponse,
     AsyncStreamingResponse as LlamaAsyncStreamingResponse,
 )
-from starlette.concurrency import run_in_threadpool
+from llama_index.core.llms import ChatMessage as LlamaChatMessage
 import json
 import logging
-import time
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ def get_reranker():
     return _reranker
 
 
-def get_query_engine(vector_store: VectorStoreProvider):
+def get_chat_engine(vector_store: VectorStoreProvider):
     global _index
 
     settings = get_settings()
@@ -53,8 +53,9 @@ def get_query_engine(vector_store: VectorStoreProvider):
             vector_store=vector_store.get_vector_store()
         )
 
-    return _index.as_query_engine(
-        similarity_top_k=3,
+    return _index.as_chat_engine(
+        chat_mode=ChatMode.CONDENSE_PLUS_CONTEXT,
+        similarity_top_k=20,
         node_postprocessors=[get_reranker()],
         streaming=True,
     )
@@ -68,12 +69,20 @@ async def chat(
     logger.info(f"Chat request received: {payload.query}")
 
     # Initialize engine (cached)
-    query_engine = get_query_engine(vector_store)
+    chat_engine = get_chat_engine(vector_store)
+
+    # Convert history to LlamaIndex ChatMessage format
+    chat_history = []
+    if payload.history:
+        chat_history = [
+            LlamaChatMessage(role=msg.role, content=msg.content)
+            for msg in payload.history
+        ]
 
     async def event_generator():
         try:
-            # Use the asynchronous aquery to avoid blocking the event loop
-            llm_response = await query_engine.aquery(payload.query)
+            # Use the asynchronous achat to avoid blocking the event loop
+            llm_response = await chat_engine.achat(payload.query, chat_history=chat_history)
 
             if isinstance(llm_response, LlamaAsyncStreamingResponse):
                 async for token in llm_response.response_gen:

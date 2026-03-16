@@ -39,7 +39,13 @@ export const ChatModule: React.FC = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ query: input }),
+        body: JSON.stringify({ 
+          query: input,
+          history: messages.map(m => ({
+            role: m.role,
+            content: m.content
+          }))
+        }),
       });
 
       if (!response.ok) throw new Error('Failed to fetch');
