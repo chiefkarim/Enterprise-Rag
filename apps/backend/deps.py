@@ -9,7 +9,7 @@ def get_db(request: Request) -> sqlite3.Connection:
     return request.app.state.db.client
 
 
-def get_vectore_store(request: Request) -> VectorStoreProvider:
+def get_vector_store(request: Request) -> VectorStoreProvider:
     return request.app.state.vector_store
 
 

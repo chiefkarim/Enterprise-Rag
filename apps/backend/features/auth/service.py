@@ -10,14 +10,14 @@ import sqlite3
 from deps import get_db
 from features.users.models import UserInDB, User
 from features.users import repository as users_repo
-import os
+from infrastructure.config import get_settings
 
-SECRET_KEY = os.getenv("JWT_SECRET_KEY")
-if SECRET_KEY is None:
-    raise ValueError("Must provide JWT_SECRET_KEY!")
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-REFRESH_TOKEN_EXPIRE_DAYS = 7
+settings = get_settings()
+
+SECRET_KEY = settings.JWT_SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
+REFRESH_TOKEN_EXPIRE_DAYS = settings.REFRESH_TOKEN_EXPIRE_DAYS
 
 password_hash = PasswordHash((Argon2Hasher(),))
 security = HTTPBearer()

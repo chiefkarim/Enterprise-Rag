@@ -12,10 +12,11 @@ from features.auth.service import (
     create_access_token, 
     create_refresh_token,
     ACCESS_TOKEN_EXPIRE_MINUTES, 
-    get_current_user,
-    ALGORITHM,
-    SECRET_KEY
+    get_current_user
 )
+from infrastructure.config import get_settings
+
+settings = get_settings()
 from features.users.models import User
 
 router = APIRouter(tags=["Authentication"])
@@ -71,7 +72,7 @@ async def refresh_token(
     db: sqlite3.Connection = Depends(get_db)
 ):
     try:
-        token_payload = jwt.decode(payload.refresh_token, str(SECRET_KEY), algorithms=[ALGORITHM])
+        token_payload = jwt.decode(payload.refresh_token, str(settings.JWT_SECRET_KEY), algorithms=[settings.ALGORITHM])
         if token_payload.get("type") != "refresh":
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,

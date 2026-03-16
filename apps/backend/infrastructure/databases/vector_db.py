@@ -1,12 +1,14 @@
-from os import getenv
 from qdrant_client import AsyncQdrantClient, QdrantClient
+from infrastructure.config import get_settings
+
+settings = get_settings()
 
 
 class QdrantConfig:
     def __init__(self):
 
-        self.qdrant_api_key = getenv("QDRANT_API_KEY")
-        self.qdrant_endpoint = getenv("QDRANT_URL")
+        self.qdrant_api_key = settings.QDRANT_API_KEY
+        self.qdrant_endpoint = settings.QDRANT_URL
 
         if self.qdrant_api_key is None:
             raise ValueError("QDRANT_API_KEY is None")

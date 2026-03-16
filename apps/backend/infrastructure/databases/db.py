@@ -1,18 +1,15 @@
-from os import getenv
-from dotenv import load_dotenv
+from infrastructure.config import get_settings
 import libsql
 
-load_dotenv()
+settings = get_settings()
 
 
 class DatabaseConfig:
 
     def __init__(self, read_only: bool = False) -> None:
 
-        self._db_auth_token = getenv(
-            "DATABASE_READ_AUTH_TOKEN" if read_only else "DATABASE_WRITE_AUTH_TOKEN"
-        )
-        self._db_url = getenv("DATABASE_URL")
+        self._db_auth_token = settings.DATABASE_READ_AUTH_TOKEN if read_only else settings.DATABASE_WRITE_AUTH_TOKEN
+        self._db_url = settings.DATABASE_URL
 
         if self._db_auth_token is None:
             raise ValueError(
@@ -23,7 +20,7 @@ class DatabaseConfig:
             raise ValueError("DATABASE_URL is None")
 
         self.client = libsql.connect(
-            database="./infrastructure/databases/sqlite/local.db",
+            database=settings.DATABASE_LOCAL_PATH,
             sync_url=self._db_url,
             auth_token=self._db_auth_token,
             sync_interval=5,

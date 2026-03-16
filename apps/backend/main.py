@@ -4,23 +4,19 @@ from starlette.responses import HTMLResponse
 from infrastructure.databases.db import DatabaseConfig
 from infrastructure.vector_store_provider import VectorStoreProvider
 import sqlite3
-from deps import get_db, get_google_drive, get_vectore_store
+from deps import get_db, get_google_drive, get_vector_store
 from features.query.models import QueryRequest
 from features.ingestion.dto import EmbedRequest
 from features.query import service as query_service
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from dotenv import load_dotenv
-from features.projects.routes import router as projects_router
-from features.users.routes import router as users_router
-from features.user_projects.routes import router as users_projects_router
-from features.auth.routes import router as auth_router
-from features.departments.routes import router as departments_router
-from features.documents.routes import router as documents_router
 from features.google_drive.google_drive_service import GoogleDriveService
 from features.ingestion.embed import embed as embed_service
+from infrastructure.config import get_settings
+from infrastructure.logging_config import setup_logging
 
-load_dotenv()
+settings = get_settings()
+setup_logging()
 
 
 @asynccontextmanager
@@ -32,6 +28,12 @@ async def lifespan(app: FastAPI):
 
 
 from fastapi.middleware.cors import CORSMiddleware
+from features.projects.routes import router as projects_router
+from features.users.routes import router as users_router
+from features.user_projects.routes import router as users_projects_router
+from features.auth.routes import router as auth_router
+from features.departments.routes import router as departments_router
+from features.documents.routes import router as documents_router
 
 app = FastAPI(lifespan=lifespan)
 
@@ -69,7 +71,7 @@ async def home(request: Request, db: sqlite3.Connection = Depends(get_db)):
 @app.post("/query")
 async def query(
     payload: QueryRequest,
-    vector_store: VectorStoreProvider = Depends(get_vectore_store),
+    vector_store: VectorStoreProvider = Depends(get_vector_store),
 ):
     return query_service.query(
         vector_store=vector_store, query=payload.query, user_filters=payload.filters
@@ -79,7 +81,7 @@ async def query(
 @app.post("/embed")
 def embed(
     payload: EmbedRequest,
-    vector_store: VectorStoreProvider = Depends(get_vectore_store),
+    vector_store: VectorStoreProvider = Depends(get_vector_store),
     google_drive: GoogleDriveService = Depends(get_google_drive),
     db: sqlite3.Connection = Depends(get_db),
 ):

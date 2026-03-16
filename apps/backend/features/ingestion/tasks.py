@@ -4,6 +4,7 @@ from rq import Queue
 from infrastructure.databases.db import DatabaseConfig
 from infrastructure.vector_store_provider import VectorStoreProvider
 from features.google_drive.google_drive_service import GoogleDriveService
+from infrastructure.logging_config import logger
 
 from features.ingestion.embed import run_embedding
 
@@ -15,7 +16,7 @@ class WorkerServices:
     _instance = None
     
     def __init__(self):
-        print("Initializing worker services...")
+        logger.info("Initializing worker services...")
         self.db_config = DatabaseConfig()
         self.db = self.db_config.client
         self.vector_store = VectorStoreProvider()

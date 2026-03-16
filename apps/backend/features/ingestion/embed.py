@@ -1,5 +1,4 @@
 import json
-import os
 import sqlite3
 import tempfile
 
@@ -12,6 +11,7 @@ from llama_index.node_parser.docling import DoclingNodeParser
 from llama_index.core import VectorStoreIndex
 
 from features.google_drive.google_drive_service import GoogleDriveService
+from infrastructure.logging_config import logger
 
 
 def embed(
@@ -34,7 +34,7 @@ def embed(
             name = google_drive_service.get_file_name(file_id)
             file_names.append(name)
         except Exception as e:
-            print(f"Failed to fetch metadata for file_id {file_id}: {e}")
+            logger.error(f"Failed to fetch metadata for file_id {file_id}: {e}")
             file_names.append(f"unknown_{file_id}")
 
     db_docs = document_service.register_documents(db, file_names)
@@ -109,7 +109,7 @@ def run_embedding(
                         meta_file_path = f"{FILE_PATH}.metadata.json"
                         with open(meta_file_path, "w") as f:
                             json.dump(meta_data, f, indent=2)
-                        print(f"Saved metadata to {meta_file_path}")
+                        logger.info(f"Saved metadata to {meta_file_path}")
 
                     documents = reader.load_data(FILE_PATH)
 
@@ -122,7 +122,7 @@ def run_embedding(
                     batch_nodes.extend(nodes)
                     batch_succeeded.append(doc_id)
                 except Exception as e:
-                    print(f"Failed to process file_id {file_id}: {e}")
+                    logger.error(f"Failed to process file_id {file_id}: {e}")
                     batch_failed.append(doc_id)
 
             # --- Step 3: Embed the batch and update states ---
