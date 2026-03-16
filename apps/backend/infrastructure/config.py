@@ -24,6 +24,12 @@ class Settings(BaseSettings):
     # App
     MODEL_NAME: str = "BAAI/bge-small-en-v1.5"
     COLLECTION_NAME: str = "company-docs"
+    
+    # Redis
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_DB: int = 0
+
 
     model_config = SettingsConfigDict(
         env_file=".env",
