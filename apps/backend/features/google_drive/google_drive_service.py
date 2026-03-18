@@ -14,10 +14,21 @@ class GoogleDriveService:
 
     def _get_service(self):
         """Get or create a thread-local drive service."""
+        from infrastructure.config import get_settings
+        import json
+        settings = get_settings()
+
         if not hasattr(self._local, "service"):
-            creds = service_account.Credentials.from_service_account_file(
-                self.SERVICE_ACCOUNT_FILE, scopes=self.SCOPES
-            )
+            if settings.GOOGLE_SERVICE_ACCOUNT_JSON:
+                creds_info = json.loads(settings.GOOGLE_SERVICE_ACCOUNT_JSON)
+                creds = service_account.Credentials.from_service_account_info(
+                    creds_info, scopes=self.SCOPES
+                )
+            else:
+                creds = service_account.Credentials.from_service_account_file(
+                    self.SERVICE_ACCOUNT_FILE, scopes=self.SCOPES
+                )
+            
             self._local.service = build("drive", "v3", credentials=creds, cache_discovery=False)
         return self._local.service
 
@@ -26,7 +37,7 @@ class GoogleDriveService:
         file_id = file_id.strip()
         service = self._get_service()
         try:
-            file_metadata = service.files().get(fileId=file_id, fields="name").execute()
+            file_metadata = service.files().get(fileId=file_id, fields="name").execute(num_retries=3)
             return file_metadata["name"]
         except Exception as e:
             from infrastructure.logging_config import logger
@@ -47,7 +58,7 @@ class GoogleDriveService:
 
         done = False
         while not done:
-            status, done = downloader.next_chunk()
+            status, done = downloader.next_chunk(num_retries=3)
             # print(f"Download {int(status.progress() * 100)}%.")
 
         return output_path, file_name

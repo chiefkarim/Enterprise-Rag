@@ -1,9 +1,15 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import model_validator
 from functools import lru_cache
-from os import path
+import os
+from typing import Any, Optional
 
 
 class Settings(BaseSettings):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        print(f"DEBUG: All ENV keys: {list(os.environ.keys())}")
+        print(f"DEBUG: Loaded REDIS_URL='{self.REDIS_URL}'")
     # Database
     DATABASE_URL: str
     DATABASE_READ_AUTH_TOKEN: str
@@ -13,6 +19,9 @@ class Settings(BaseSettings):
     # Qdrant
     QDRANT_API_KEY: str
     QDRANT_URL: str
+
+    # Google Drive
+    GOOGLE_SERVICE_ACCOUNT_JSON: str | None = None
 
     # JWT
     JWT_SECRET_KEY: str
@@ -27,6 +36,7 @@ class Settings(BaseSettings):
     COLLECTION_NAME: str = "company-docs"
     
     # Redis
+    REDIS_URL: str = "redis://localhost:6379/0"
     REDIS_HOST: str = "localhost"
     REDIS_PORT: int = 6379
     REDIS_DB: int = 0
@@ -37,6 +47,16 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         extra="ignore"
     )
+
+    @model_validator(mode="after")
+    def strip_quotes(self) -> "Settings":
+        for field_name, value in self.__dict__.items():
+            if isinstance(value, str):
+                # Aggressive stripping of quotes and whitespace
+                # This handles strings like '"my-url"' or " 'my-token' "
+                cleaned = value.strip().strip("\"'")
+                setattr(self, field_name, cleaned)
+        return self
 
 @lru_cache
 def get_settings():
