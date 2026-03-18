@@ -10,11 +10,7 @@ from features.ingestion.embed import run_embedding
 
 # Redis connection from settings
 settings = get_settings()
-redis_conn = Redis(
-    host=settings.REDIS_HOST, 
-    port=settings.REDIS_PORT, 
-    db=settings.REDIS_DB
-)
+redis_conn = Redis.from_url(settings.REDIS_URL)
 q = Queue("embeddings", connection=redis_conn)
 
 
@@ -72,6 +68,7 @@ def enqueue_embedding_task(
     """
     return q.enqueue(
         process_embed_task,
+        job_timeout=3600,
         file_ids=file_ids,
         file_id_to_doc_id=file_id_to_doc_id,
         project_id=project_id,
