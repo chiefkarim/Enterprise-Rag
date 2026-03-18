@@ -19,6 +19,8 @@ class DatabaseConfig:
         if self._db_url is None:
             raise ValueError("DATABASE_URL is None")
 
+        print(f"DEBUG: Connecting to local DB at: {settings.DATABASE_LOCAL_PATH}")
+        print(f"DEBUG: Syncing with URL: {self._db_url}")
         self.client = libsql.connect(
             database=settings.DATABASE_LOCAL_PATH,
             sync_url=self._db_url,

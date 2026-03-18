@@ -3,8 +3,10 @@ name = "Enterprise-Rag"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12, <3.14"
 dependencies = [
+    "torch",
+    "torchvision",
     "docling>=2.77.0",
     "dotenv>=0.9.9",
     "fastapi[standard]>=0.135.1",
@@ -26,8 +28,23 @@ dependencies = [
     "pyrefly>=0.56.0",
     "python-multipart>=0.0.22",
     "qdrant-client>=1.17.0",
-    "sentence-transformers>=5.2.3",
+    "qdrant-client>=1.17.0",
     "rq>=2.0.0",
     "redis>=5.2.1",
     "pydantic-settings>=2.13.1",
+    "opencv-python-headless>=4.11.0.86",
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+torchvision = { index = "pytorch-cpu" }
+
+[tool.uv]
+override-dependencies = [
+    "opencv-python-headless>=4.11.0.86",
 ]
