@@ -6,6 +6,7 @@ tmp_*
 sqlite/
 
 .env*
+!.env.example
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
