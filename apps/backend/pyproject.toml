@@ -33,6 +33,7 @@ dependencies = [
     "redis>=5.2.1",
     "pydantic-settings>=2.13.1",
     "opencv-python-headless>=4.11.0.86",
+    "sentence-transformers>=5.3.0",
 ]
 
 [[tool.uv.index]]
