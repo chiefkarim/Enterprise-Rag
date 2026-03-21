@@ -53,26 +53,25 @@ export default function SignUpPage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-[#0a1628] flex items-center justify-center p-4 relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-blue-600/10 blur-[120px]" />
-          <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-indigo-600/10 blur-[120px]" />
-        </div>
+      <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Subtle organic background decoration */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/30 rounded-full blur-[100px] translate-y-1/4 -translate-x-1/4 pointer-events-none" />
 
         <div className="relative w-full max-w-md">
-          <div className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 shadow-2xl text-center">
-            <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
-              <CheckCircle2 className="w-8 h-8 text-green-400" />
+          <div className="relative rounded-[2.5rem] border border-border/50 bg-card p-10 shadow-2xl shadow-primary/5 text-center">
+            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-8 shadow-inner">
+              <CheckCircle2 className="w-10 h-10 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Account Created!</h1>
-            <p className="text-white/60 mb-6">
-              Your account has been successfully created. Redirecting you to the sign-in page...
+            <h1 className="text-3xl font-serif italic text-foreground mb-3 tracking-tight">Account Created</h1>
+            <p className="text-muted-foreground font-light mb-8 leading-relaxed">
+              Your organic knowledge space is being prepared. Redirecting you to sign in...
             </p>
             <Link
               to="/signin"
-              className="inline-flex items-center text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors"
+              className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-primary hover:underline transition-all"
             >
-              Click here if you are not redirected
+              Take me there now
             </Link>
           </div>
         </div>
@@ -81,42 +80,37 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a1628] flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Ambient background blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-blue-600/10 blur-[120px]" />
-        <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-indigo-600/10 blur-[120px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-cyan-600/5 blur-[150px]" />
-      </div>
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Subtle organic background decoration */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/30 rounded-full blur-[100px] translate-y-1/4 -translate-x-1/4 pointer-events-none" />
 
       {/* Card */}
       <div className="relative w-full max-w-md">
-        {/* Glass card */}
         <div
-          className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 shadow-2xl"
-          style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.05), 0 32px 64px -12px rgba(0,0,0,0.7)' }}
+          className="relative rounded-[2.5rem] border border-border/50 bg-card p-10 shadow-2xl shadow-primary/5"
         >
           {/* Logo / Icon */}
-          <div className="flex flex-col items-center mb-8">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/30 mb-4">
-              <Sparkles className="w-7 h-7 text-white" />
+          <div className="flex flex-col items-center mb-10">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center shadow-sm mb-6">
+              <Sparkles className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Create an account</h1>
-            <p className="text-sm text-white/50 mt-1">Join Enterprise RAG today</p>
+            <h1 className="text-3xl font-serif italic font-medium text-foreground tracking-tight">Create account</h1>
+            <p className="text-sm text-muted-foreground mt-2 font-light">Join the organic knowledge revolution</p>
           </div>
 
           {/* Error alert */}
           {errorMessage && (
-            <div className="mb-5 flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3">
-              <AlertCircle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
-              <p className="text-sm text-red-400">{errorMessage}</p>
+            <div className="mb-6 flex items-start gap-3 rounded-2xl border border-red-500/20 bg-red-500/5 px-5 py-4">
+              <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
+              <p className="text-sm text-red-600 font-medium">{errorMessage}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {/* Name */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-white/70 mb-1.5">
+              <label htmlFor="name" className="block text-xs uppercase tracking-widest font-bold text-muted-foreground mb-3">
                 Full Name
               </label>
               <input
@@ -124,18 +118,18 @@ export default function SignUpPage() {
                 type="text"
                 placeholder="John Doe"
                 {...register('name')}
-                className={`w-full rounded-xl border bg-white/5 px-4 py-3 text-white placeholder-white/25 text-sm
-                  focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-200
-                  ${errors.name ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10 hover:border-white/20 focus:border-blue-500/50'}`}
+                className={`w-full rounded-2xl border bg-background px-5 py-4 text-foreground placeholder-muted-foreground/30 text-sm font-light
+                  focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300
+                  ${errors.name ? 'border-red-500/30 focus:ring-red-500/20' : 'border-border/50 hover:border-primary/20 focus:border-primary/50'}`}
               />
               {errors.name && (
-                <p className="mt-1.5 text-xs text-red-400">{errors.name.message}</p>
+                <p className="mt-2 text-xs text-red-500 font-medium">{errors.name.message}</p>
               )}
             </div>
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-white/70 mb-1.5">
+              <label htmlFor="email" className="block text-xs uppercase tracking-widest font-bold text-muted-foreground mb-3">
                 Email address
               </label>
               <input
@@ -143,18 +137,18 @@ export default function SignUpPage() {
                 type="email"
                 placeholder="you@company.com"
                 {...register('email')}
-                className={`w-full rounded-xl border bg-white/5 px-4 py-3 text-white placeholder-white/25 text-sm
-                  focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-200
-                  ${errors.email ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10 hover:border-white/20 focus:border-blue-500/50'}`}
+                className={`w-full rounded-2xl border bg-background px-5 py-4 text-foreground placeholder-muted-foreground/30 text-sm font-light
+                  focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300
+                  ${errors.email ? 'border-red-500/30 focus:ring-red-500/20' : 'border-border/50 hover:border-primary/20 focus:border-primary/50'}`}
               />
               {errors.email && (
-                <p className="mt-1.5 text-xs text-red-400">{errors.email.message}</p>
+                <p className="mt-2 text-xs text-red-500 font-medium">{errors.email.message}</p>
               )}
             </div>
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-white/70 mb-1.5">
+              <label htmlFor="password" className="block text-xs uppercase tracking-widest font-bold text-muted-foreground mb-3">
                 Password
               </label>
               <div className="relative">
@@ -163,21 +157,21 @@ export default function SignUpPage() {
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   {...register('password')}
-                  className={`w-full rounded-xl border bg-white/5 px-4 py-3 pr-11 text-white placeholder-white/25 text-sm
-                    focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-200
-                    ${errors.password ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10 hover:border-white/20 focus:border-blue-500/50'}`}
+                  className={`w-full rounded-2xl border bg-background px-5 py-4 pr-12 text-foreground placeholder-muted-foreground/30 text-sm font-light
+                    focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300
+                    ${errors.password ? 'border-red-500/30 focus:ring-red-500/20' : 'border-border/50 hover:border-primary/20 focus:border-primary/50'}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground/40 hover:text-primary transition-colors"
                   tabIndex={-1}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1.5 text-xs text-red-400">{errors.password.message}</p>
+                <p className="mt-2 text-xs text-red-500 font-medium">{errors.password.message}</p>
               )}
             </div>
 
@@ -185,20 +179,20 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={signupMutation.isPending}
-              className="w-full mt-4 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500
-                py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20
-                hover:shadow-blue-500/40 hover:brightness-110 active:scale-[0.98]
-                disabled:opacity-60 disabled:cursor-not-allowed
-                transition-all duration-200"
+              className="w-full mt-6 flex items-center justify-center gap-3 rounded-full bg-primary
+                py-4 text-sm font-bold text-primary-foreground shadow-xl shadow-primary/20
+                hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0
+                disabled:opacity-50 disabled:cursor-not-allowed
+                transition-all duration-300"
             >
               {signupMutation.isPending ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Creating account…
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Creating…
                 </>
               ) : (
                 <>
-                  <UserPlus className="w-4 h-4" />
+                  <UserPlus className="w-5 h-5" />
                   Sign up
                 </>
               )}
@@ -206,12 +200,14 @@ export default function SignUpPage() {
           </form>
 
           {/* Footer */}
-          <p className="mt-6 text-center text-sm text-white/50">
-            Already have an account?{' '}
-            <Link to="/signin" className="text-blue-400 hover:text-blue-300 font-medium ml-1 transition-colors">
-              Sign in
-            </Link>
-          </p>
+          <div className="mt-10 pt-8 border-t border-border/50 text-center">
+            <p className="text-xs text-muted-foreground/60 font-medium">
+              Already have an account?{' '}
+              <Link to="/signin" className="text-primary font-bold hover:underline ml-1 transition-colors">
+                Sign in
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

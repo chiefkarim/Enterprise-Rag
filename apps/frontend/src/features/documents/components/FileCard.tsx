@@ -13,11 +13,13 @@ export const FileCard: React.FC<FileCardProps> = ({ file, onDragStart, onDragEnd
       draggable
       onDragStart={(e) => onDragStart(e, file.id)}
       onDragEnd={onDragEnd}
-      className="group bg-white/5 border border-border hover:border-primary/50 rounded-lg p-3 flex items-center gap-3 cursor-grab active:cursor-grabbing transition-all hover:bg-white/10"
+      className="group bg-card border border-border/50 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 rounded-xl p-4 flex items-center gap-4 cursor-grab active:cursor-grabbing transition-all duration-300"
     >
-      <GripVertical className="w-4 h-4 text-white/30 group-hover:text-white/60" />
-      <FileText className="w-4 h-4 text-primary" />
-      <span className="text-sm text-white/90 truncate flex-1" title={file.name}>
+      <GripVertical className="w-4 h-4 text-muted-foreground/20 group-hover:text-primary/50 transition-colors" />
+      <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center">
+        <FileText className="w-4 h-4 text-primary opacity-60" />
+      </div>
+      <span className="text-sm text-foreground/80 truncate flex-1 font-light" title={file.name}>
         {file.name}
       </span>
     </div>

@@ -21,26 +21,27 @@ export default function DocumentsPage() {
   });
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-10 max-w-7xl mx-auto space-y-10">
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-white">Workspace Documents</h2>
-          <p className="text-sm text-white/50 mt-1">
-            View and manage documents available for semantic search.
+        <div className="max-w-2xl">
+          <h2 className="text-4xl font-serif italic font-medium text-foreground tracking-tight">Workspace Documents</h2>
+          <p className="text-muted-foreground text-lg mt-2 font-light leading-relaxed">
+            Manage the organic knowledge segments available for semantic search.
           </p>
-          <p className="text-xs text-amber-400/80 mt-2 flex items-center gap-1.5 bg-amber-400/10 w-fit px-2.5 py-1 rounded-md border border-amber-400/20">
-            Note: Ensure selected files are shared with <span className="font-mono text-amber-400 font-semibold selection:bg-amber-400/30">enterprise-rag@enterprise-rag-489707.iam.gserviceaccount.com</span>
-          </p>
+          <div className="text-primary text-[10px] uppercase tracking-widest mt-6 flex items-center gap-3 bg-primary/5 w-fit px-4 py-2.5 rounded-full border border-primary/20 font-bold">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            Service Account: <span className="font-mono text-foreground/80 selection:bg-primary/30">enterprise-rag@enterprise-rag-489707.iam.gserviceaccount.com</span>
+          </div>
         </div>
         <Button
           onClick={handleOpenPicker}
           disabled={isSubmitting}
-          className="flex items-center gap-2"
+          className="flex items-center gap-3 px-8 py-6 rounded-full font-bold shadow-xl shadow-primary/20 hover:-translate-y-1 transition-all"
         >
           {isSubmitting ? (
             <>
-              <div className="w-4 h-4 border-2 border-[#0a1628] border-t-transparent rounded-full animate-spin" />
-              Processing...
+              <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+              Cultivating...
             </>
           ) : (
             'Add from Google Drive'
@@ -48,7 +49,10 @@ export default function DocumentsPage() {
         </Button>
       </div>
 
-      <DocumentTable documents={documents} isLoading={isLoading} />
+      <div className="relative group">
+        <div className="absolute inset-0 bg-primary/5 rounded-[2.5rem] blur-3xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+        <DocumentTable documents={documents} isLoading={isLoading} />
+      </div>
 
       <AssignmentModal
         isOpen={isAssigning}
