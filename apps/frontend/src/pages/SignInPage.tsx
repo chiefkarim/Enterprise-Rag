@@ -11,7 +11,7 @@ import { useAuthStore } from '@/features/auth/stores/authStore';
 
 export default function SignInPage() {
   const navigate = useNavigate();
-  const { accessToken, setAccessToken, setUser } = useAuthStore();
+  const { accessToken, setAuth } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -31,9 +31,12 @@ export default function SignInPage() {
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginRequest) => {
       const tokenData = await login(credentials);
-      setAccessToken(tokenData.access_token);
+      // Set access token immediately so subsequent requests (like getMe) 
+      // can use it in the axios interceptor.
+      useAuthStore.getState().setAccessToken(tokenData.access_token);
+      
       const user = await getMe();
-      setUser(user);
+      setAuth(tokenData.access_token, tokenData.refresh_token, user);
       return user;
     },
     onSuccess: () => {
@@ -53,42 +56,37 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a1628] flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Ambient background blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-blue-600/10 blur-[120px]" />
-        <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-indigo-600/10 blur-[120px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-cyan-600/5 blur-[150px]" />
-      </div>
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Subtle organic background decoration */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/30 rounded-full blur-[100px] translate-y-1/4 -translate-x-1/4 pointer-events-none" />
 
       {/* Card */}
       <div className="relative w-full max-w-md">
-        {/* Glass card */}
         <div
-          className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 shadow-2xl"
-          style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.05), 0 32px 64px -12px rgba(0,0,0,0.7)' }}
+          className="relative rounded-[2.5rem] border border-border/50 bg-card p-10 shadow-2xl shadow-primary/5"
         >
           {/* Logo / Icon */}
-          <div className="flex flex-col items-center mb-8">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/30 mb-4">
-              <Sparkles className="w-7 h-7 text-white" />
+          <div className="flex flex-col items-center mb-10">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center shadow-sm mb-6">
+              <Sparkles className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Welcome back</h1>
-            <p className="text-sm text-white/50 mt-1">Sign in to your Enterprise RAG account</p>
+            <h1 className="text-3xl font-serif italic font-medium text-foreground tracking-tight">Welcome back</h1>
+            <p className="text-sm text-muted-foreground mt-2 font-light">Sign in to your organic knowledge hub</p>
           </div>
 
           {/* Error alert */}
           {errorMessage && (
-            <div className="mb-5 flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3">
-              <AlertCircle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
-              <p className="text-sm text-red-400">{errorMessage}</p>
+            <div className="mb-6 flex items-start gap-3 rounded-2xl border border-red-500/20 bg-red-500/5 px-5 py-4">
+              <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" />
+              <p className="text-sm text-red-600 font-medium">{errorMessage}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-white/70 mb-2">
+              <label htmlFor="email" className="block text-xs uppercase tracking-widest font-bold text-muted-foreground mb-3">
                 Email address
               </label>
               <input
@@ -97,18 +95,18 @@ export default function SignInPage() {
                 autoComplete="email"
                 placeholder="you@company.com"
                 {...register('email')}
-                className={`w-full rounded-xl border bg-white/5 px-4 py-3 text-white placeholder-white/25 text-sm
-                  focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-200
-                  ${errors.email ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10 hover:border-white/20 focus:border-blue-500/50'}`}
+                className={`w-full rounded-2xl border bg-background px-5 py-4 text-foreground placeholder-muted-foreground/30 text-sm font-light
+                  focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300
+                  ${errors.email ? 'border-red-500/30 focus:ring-red-500/20' : 'border-border/50 hover:border-primary/20 focus:border-primary/50'}`}
               />
               {errors.email && (
-                <p className="mt-1.5 text-xs text-red-400">{errors.email.message}</p>
+                <p className="mt-2 text-xs text-red-500 font-medium">{errors.email.message}</p>
               )}
             </div>
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-white/70 mb-2">
+              <label htmlFor="password" className="block text-xs uppercase tracking-widest font-bold text-muted-foreground mb-3">
                 Password
               </label>
               <div className="relative">
@@ -118,14 +116,14 @@ export default function SignInPage() {
                   autoComplete="current-password"
                   placeholder="••••••••"
                   {...register('password')}
-                  className={`w-full rounded-xl border bg-white/5 px-4 py-3 pr-11 text-white placeholder-white/25 text-sm
-                    focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-200
-                    ${errors.password ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10 hover:border-white/20 focus:border-blue-500/50'}`}
+                  className={`w-full rounded-2xl border bg-background px-5 py-4 pr-12 text-foreground placeholder-muted-foreground/30 text-sm font-light
+                    focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300
+                    ${errors.password ? 'border-red-500/30 focus:ring-red-500/20' : 'border-border/50 hover:border-primary/20 focus:border-primary/50'}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground/40 hover:text-primary transition-colors"
                   tabIndex={-1}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
@@ -133,7 +131,7 @@ export default function SignInPage() {
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1.5 text-xs text-red-400">{errors.password.message}</p>
+                <p className="mt-2 text-xs text-red-500 font-medium">{errors.password.message}</p>
               )}
             </div>
 
@@ -142,30 +140,32 @@ export default function SignInPage() {
               id="signin-submit"
               type="submit"
               disabled={loginMutation.isPending}
-              className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500
-                py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20
-                hover:shadow-blue-500/40 hover:brightness-110 active:scale-[0.98]
-                disabled:opacity-60 disabled:cursor-not-allowed
-                transition-all duration-200"
+              className="w-full mt-4 flex items-center justify-center gap-3 rounded-full bg-primary
+                py-4 text-sm font-bold text-primary-foreground shadow-xl shadow-primary/20
+                hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0
+                disabled:opacity-50 disabled:cursor-not-allowed
+                transition-all duration-300"
             >
               {loginMutation.isPending ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Signing in…
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Cultivating…
                 </>
               ) : (
                 <>
-                  <LogIn className="w-4 h-4" />
+                  <LogIn className="w-5 h-5" />
                   Sign in
                 </>
               )}
             </button>
           </form>
 
-          {/* Divider hint */}
-          <p className="mt-6 text-center text-xs text-white/30">
-            Don't have an account? Contact your administrator.
-          </p>
+          {/* Footer hint */}
+          <div className="mt-10 pt-8 border-t border-border/50 text-center">
+            <p className="text-xs text-muted-foreground/60 font-medium">
+              New here? <a href="/signup" className="text-primary font-bold hover:underline">Request Access</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

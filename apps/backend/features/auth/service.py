@@ -12,12 +12,16 @@ from features.users.models import UserInDB, User
 from features.users import repository as users_repo
 from infrastructure.config import get_settings
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 settings = get_settings()
 
 SECRET_KEY = settings.JWT_SECRET_KEY
 ALGORITHM = settings.ALGORITHM
-ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
-REFRESH_TOKEN_EXPIRE_DAYS = settings.REFRESH_TOKEN_EXPIRE_DAYS
+ACCESS_TOKEN_EXPIRE_MINUTES = float(settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+REFRESH_TOKEN_EXPIRE_DAYS = int(settings.REFRESH_TOKEN_EXPIRE_DAYS)
 
 password_hash = PasswordHash((Argon2Hasher(),))
 security = HTTPBearer()
